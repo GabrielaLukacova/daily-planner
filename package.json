@@ -1,0 +1,47 @@
+{
+  "name": "daily-planner-main",
+  "version": "1.0.0",
+  "description": "MongoDB Express Node Typescript REST API",
+  "main": "index.js",
+  "scripts": {
+    "start-dev": "npx nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielaLukacova/daily-planner.git"
+  },
+  "author": "Gabriela and Emma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielaLukacova/daily-planner/issues"
+  },
+  "homepage": "https://github.com/GabrielaLukacova/daily-planner#readme",
+  "nodemonConfig": {
+    "verbose": false,
+    "watch": [
+      "src"
+    ],
+    "ext": "js,ts",
+    "exec": "npx ts-node ./src/index.ts",
+    "ignore": [
+      "node_modules"
+    ]
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv-flow": "^4.1.0",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "mongodb": "^6.14.2",
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/joi": "^17.2.2",
+    "@types/node": "^22.13.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
