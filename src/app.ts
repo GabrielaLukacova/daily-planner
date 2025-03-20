@@ -1,14 +1,28 @@
 import express, { Application, Request, Response } from 'express';
-import DotenvFlow from 'dotenv-flow';
+import dotenvFlow from 'dotenv-flow';
+import { testConnection } from './repository/database';
 
+// Load environment variables
+dotenvFlow.config();
 
-DotenvFlow.config();
-
-// Create Express server
+// Create express app
 const app: Application = express();
 
-export function startServer(){
-    app.listen(4000, function(){
-        console.log('Server is running on port:' + 4000);
-    });
+// Define routes
+app.get('/', (req: Request, res: Response) => {
+  res.send('Welcome to Daily Planner API!');
+});
+
+// Start the server
+export function startServer() {
+
+
+// Test connection to database
+  testConnection();
+
+  const PORT: number = parseInt(process.env.PORT as string) || 4000;
+  app.listen(PORT, function() {
+    console.log('Server is running on port:' + PORT);
+  });
 }
+
