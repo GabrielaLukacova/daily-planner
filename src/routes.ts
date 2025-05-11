@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-
+import { verifyToken, registerUser, loginUser } from './controllers/authController';
 
 import {
     createActivity,
@@ -18,6 +18,14 @@ import {
     updateNoteById,
     deleteNoteById,
   } from './controllers/noteController';
+
+  import {
+    createTask,
+    getAllTasks,
+    getTaskById,
+    updateTaskById,
+    deleteTaskById
+  } from './controllers/taskController';
 
 const router: Router = Router();
 
@@ -51,6 +59,10 @@ const router: Router = Router();
  *         description: List of matching activities
  */
 router.get('/activities/query/:field/:value', getActivitiesByQuery);
+
+router.get('/tasks', verifyToken, getAllTasks);
+router.put('/tasks/:id', verifyToken, updateTaskById);
+router.delete('/tasks/:id', verifyToken, deleteTaskById);
 
 /**
  * @swagger
@@ -196,3 +208,164 @@ router.put('/notes/:id', verifyToken, updateNoteById);
  *         description: Note deleted successfully
  */
 router.delete('/notes/:id', verifyToken, deleteNoteById);
+
+
+
+
+/** ------------- TASK ROUTES ------------- */
+
+/**
+ * @swagger
+ * /tasks:
+ *   post:
+ *     tags:
+ *       - Task Routes
+ *     summary: Create a new task
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Task"
+ *     responses:
+ *       201:
+ *         description: Task created
+ */
+router.post('/tasks', verifyToken, createTask);
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   get:
+ *     tags:
+ *       - Task Routes
+ *     summary: Get a task by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: Task data
+ */
+router.get('/tasks/:id', verifyToken, getTaskById);
+
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     tags:
+ *       - Task Routes
+ *     summary: Get all tasks
+ *     security:
+ *       - ApiKeyAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/Task"
+ */
+router.get('/tasks', verifyToken, getAllTasks);
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   put:
+ *     tags:
+ *       - Task Routes
+ *     summary: Update a task
+ *     security:
+ *       - ApiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Task ID
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Task"
+ *     responses:
+ *       200:
+ *         description: Task updated
+ */
+router.put('/tasks/:id', verifyToken, updateTaskById);
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   delete:
+ *     tags:
+ *       - Task Routes
+ *     summary: Delete a task
+ *     security:
+ *       - ApiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Task ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Task deleted
+ */
+router.delete('/tasks/:id', verifyToken, deleteTaskById);
+
+
+/** ------------- USER ROUTES ------------- */
+
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     tags:
+ *       - Auth Routes
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User registered
+ */
+router.post('/register', registerUser);
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     tags:
+ *       - Auth Routes
+ *     summary: Log in a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User logged in
+ */
+router.post('/login', loginUser);
