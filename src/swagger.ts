@@ -20,8 +20,37 @@ const swaggerOptions = {
         description: "Production server",
       },
     ],
+    components: {
+      schemas: {
+        User: {
+          type: "object",
+          required: ["name", "email", "password"],
+          properties: {
+            name: { type: "string" },
+            email: { type: "string" },
+            password: { type: "string" },
+          }
+        },
+        Task: {
+          type: "object",
+          required: ["title", "userId"],
+          properties: {
+            userId: { type: "string" },
+            title: { type: "string" },
+            isCompleted: {
+              type: "boolean",
+              default: false,
+            },
+            highPriority: {
+              type: "boolean",
+              default: false,
+            }
+          }
+        }
+      }
+    }
   },
-  apis: ["./src/routes.ts"], 
+  apis: ["./src/**/*.ts"], 
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
