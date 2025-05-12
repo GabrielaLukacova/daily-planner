@@ -1,7 +1,9 @@
 import express, { Application, Request, Response } from 'express';
 import dotenvFlow from 'dotenv-flow';
-import { testConnection } from './repository/database';
+import { connect } from './repository/database';
 import { setupSwagger } from './swagger';
+import { router } from './routes';
+
 
 // Load environment variables
 dotenvFlow.config();
@@ -13,15 +15,17 @@ app.use(express.json());
 // Setup Swagger documentation
 setupSwagger(app);
 
-// Define routes
+// Uses routes from routes.ts
+app.use('/api', router); 
+
+// Home Route
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Daily Planner API!');
 });
 
-// Start server function
+// Start server
 export function startServer() {
-  // Test DB connection
-  testConnection();
+  connect();
 
   const PORT: number = parseInt(process.env.PORT as string) || 4000;
   app.listen(PORT, () => {
@@ -31,3 +35,4 @@ export function startServer() {
 }
 
 export default app;
+

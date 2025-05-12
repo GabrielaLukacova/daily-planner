@@ -28,6 +28,7 @@ import {
   } from './controllers/taskController';
 
 const router: Router = Router();
+export { router };
 
 
 
