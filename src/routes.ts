@@ -35,6 +35,8 @@ export { router };
 
 /** ------------- ACTIVITY ROUTES ------------- */
 
+/** ------------- ACTIVITY ROUTES ------------- */
+
 /**
  * @swagger
  * /activities/query/{field}/{value}:
@@ -74,17 +76,33 @@ router.get('/activities/query/:field/:value', getActivitiesByQuery);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - date
+ *               - startTime
+ *               - endTime
+ *               - place
+ *               - isRepeating
  *             properties:
- *               name:
+ *               title:
  *                 type: string
- *                 description: The name of the activity
  *               description:
  *                 type: string
- *                 description: A description of the activity
  *               date:
  *                 type: string
- *                 format: date
- *                 description: The date of the activity
+ *                 format: date-time
+ *               startTime:
+ *                 type: string
+ *               endTime:
+ *                 type: string
+ *               place:
+ *                 type: string
+ *               isRepeating:
+ *                 type: boolean
+ *               repeating:
+ *                 type: string
+ *                 enum: [None, Daily, Weekly, Monthly]  # adjust to actual enum values
  *     responses:
  *       201:
  *         description: Activity successfully created
@@ -92,11 +110,6 @@ router.get('/activities/query/:field/:value', getActivitiesByQuery);
  *         description: Invalid input
  */
 router.post('/activities', createActivity);
-
-
-router.get('/tasks', verifyToken, getAllTasks);
-router.put('/tasks/:id', verifyToken, updateTaskById);
-router.delete('/tasks/:id', verifyToken, deleteTaskById);
 
 /**
  * @swagger
@@ -137,7 +150,34 @@ router.get('/activities/:id', getActivityById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/Activity"
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - date
+ *               - startTime
+ *               - endTime
+ *               - place
+ *               - isRepeating
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *               startTime:
+ *                 type: string
+ *               endTime:
+ *                 type: string
+ *               place:
+ *                 type: string
+ *               isRepeating:
+ *                 type: boolean
+ *               repeating:
+ *                 type: string
+ *                 enum: [None, Daily, Weekly, Monthly]  # adjust as needed
  *     responses:
  *       200:
  *         description: Activity updated successfully
@@ -163,6 +203,11 @@ router.put('/activities/:id', verifyToken, updateActivityById);
  *         description: Activity deleted successfully
  */
 router.delete('/activities/:id', verifyToken, deleteActivityById);
+
+router.get('/tasks', verifyToken, getAllTasks);
+router.put('/tasks/:id', verifyToken, updateTaskById);
+router.delete('/tasks/:id', verifyToken, deleteTaskById);
+
 
 
 
@@ -202,7 +247,6 @@ router.get('/notes', getAllNotes);
  */
 router.get('/notes/:id', getNoteById);
 
-
 /**
  * @swagger
  * /notes:
@@ -217,22 +261,21 @@ router.get('/notes/:id', getNoteById);
  *           schema:
  *             type: object
  *             required:
- *               - title
- *               - content
+ *               - text
+ *               - date
  *             properties:
- *               title:
+ *               text:
  *                 type: string
- *               content:
+ *               date:
  *                 type: string
+ *                 format: date-time
  *     responses:
  *       201:
  *         description: Note created successfully
  *       400:
  *         description: Invalid input
  */
-router.post('/notes', verifyToken, createNote);
-
-
+router.post('/notes', createNote);
 
 /**
  * @swagger
@@ -253,7 +296,16 @@ router.post('/notes', verifyToken, createNote);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/Note"
+ *             type: object
+ *             required:
+ *               - text
+ *               - date
+ *             properties:
+ *               text:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date-time
  *     responses:
  *       200:
  *         description: Note updated successfully
@@ -279,7 +331,6 @@ router.put('/notes/:id', verifyToken, updateNoteById);
  *         description: Note deleted successfully
  */
 router.delete('/notes/:id', verifyToken, deleteNoteById);
-
 
 
 
