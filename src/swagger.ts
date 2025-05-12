@@ -8,7 +8,7 @@ const swaggerOptions = {
     info: {
       title: "Daily Planner API",
       version: "1.0.0",
-      description: "API documentation for your daily planner backend",
+      description: "API documentation for daily planner backend",
     },
     servers: [
       {
@@ -16,11 +16,19 @@ const swaggerOptions = {
         description: "Local server",
       },
       {
-        url: "https://ments-api-2t08.onrender.com",
+        url: "https://ments-api-2t08.onrender.com", // change link later
         description: "Production server",
       },
     ],
     components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'Authorization',
+          description: 'Enter your API key in the format: Bearer <token>'
+        }
+      },
       schemas: {
         User: {
           type: "object",
@@ -29,7 +37,7 @@ const swaggerOptions = {
             name: { type: "string" },
             email: { type: "string" },
             password: { type: "string" },
-          }
+          },
         },
         Task: {
           type: "object",
@@ -44,17 +52,59 @@ const swaggerOptions = {
             highPriority: {
               type: "boolean",
               default: false,
-            }
-          }
-        }
-      }
-    }
+            },
+          },
+        },
+        Activity: {
+          type: "object",
+          required: [
+            "title",
+            "description",
+            "date",
+            "startTime",
+            "endTime",
+            "place",
+            "isRepeating",
+            "_createdBy"
+          ],
+          properties: {
+            title: { type: "string" },
+            description: { type: "string" },
+            date: { type: "string", format: "date" },
+            startTime: { type: "string" }, 
+            endTime: { type: "string" },
+            place: { type: "string" },
+            isRepeating: { type: "boolean" },
+            repeating: {
+              type: "string",
+              enum: ["None", "Daily", "Weekly", "Monthly"], 
+              default: "None",
+            },
+            _createdBy: { type: "string" }, 
+          },
+        },
+        Note: {
+          type: "object",
+          required: ["text", "date", "_createdBy"],
+          properties: {
+            text: { type: "string" },
+            date: { type: "string", format: "date" },
+            _createdBy: { type: "string" },
+          },
+        },
+      },
+    },
+    security: [
+      {
+        ApiKeyAuth: [],
+      },
+    ],
   },
-  apis: ["./src/**/*.ts"], 
+  apis: ["./src/**/*.ts"],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 export function setupSwagger(app: Application) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-}
+} 

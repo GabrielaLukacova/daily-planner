@@ -2,18 +2,25 @@ import { Request, Response } from 'express';
 import { activityModel } from '../models/activityModel';
 import { connect, disconnect } from '../repository/database';
 
-/**
- * Create a new activity
- */
 export async function createActivity(req: Request, res: Response) {
-  const data = req.body;
   try {
     await connect();
-    const activity = new activityModel(data);
-    const result = await activity.save();
-    res.status(201).send(result);
-  } catch {
-    res.status(500).send("Error creating activity.");
+    const newActivity = new activityModel({
+      title: req.body.title,
+      description: req.body.description,
+      date: req.body.date,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+      place: req.body.place,
+      isRepeating: req.body.isRepeating,
+      repeating: req.body.repeating,
+      _createdBy: req.body._createdBy,
+    });
+
+    const savedActivity = await newActivity.save();
+    res.status(201).json(savedActivity);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create activity', error });
   } finally {
     await disconnect();
   }
