@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import dotenvFlow from 'dotenv-flow';
 import { testConnection } from './repository/database';
 import { setupSwagger } from './swagger';
+import router from './routes'; 
 
 // Load environment variables
 dotenvFlow.config();
@@ -13,7 +14,10 @@ app.use(express.json());
 // Setup Swagger documentation
 setupSwagger(app);
 
-// Define routes
+// API Routes
+app.use('/api', router); // All routes will be under /api
+
+// Root endpoint
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Daily Planner API!');
 });

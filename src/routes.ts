@@ -60,6 +60,39 @@ const router: Router = Router();
  */
 router.get('/activities/query/:field/:value', getActivitiesByQuery);
 
+/**
+ * @swagger
+ * /activities:
+ *   post:
+ *     tags:
+ *       - Activity Routes
+ *     summary: Creates a new activity
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The name of the activity
+ *               description:
+ *                 type: string
+ *                 description: A description of the activity
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 description: The date of the activity
+ *     responses:
+ *       201:
+ *         description: Activity successfully created
+ *       400:
+ *         description: Invalid input
+ */
+router.post('/activities', createActivity);
+
+
 router.get('/tasks', verifyToken, getAllTasks);
 router.put('/tasks/:id', verifyToken, updateTaskById);
 router.delete('/tasks/:id', verifyToken, deleteTaskById);
@@ -91,8 +124,6 @@ router.get('/activities/:id', getActivityById);
  *     tags:
  *       - Activity Routes
  *     summary: Update an activity
- *     security:
- *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -119,8 +150,6 @@ router.put('/activities/:id', verifyToken, updateActivityById);
  *     tags:
  *       - Activity Routes
  *     summary: Delete an activity
- *     security:
- *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -138,6 +167,19 @@ router.delete('/activities/:id', verifyToken, deleteActivityById);
 
 
 /** ------------- NOTE ROUTES ------------- */
+
+/**
+ * @swagger
+ * /notes:
+ *   get:
+ *     tags:
+ *       - Note Routes
+ *     summary: Get all notes
+ *     responses:
+ *       200:
+ *         description: List of all notes
+ */
+router.get('/notes', getAllNotes);
 
 /**
  * @swagger
@@ -159,6 +201,38 @@ router.delete('/activities/:id', verifyToken, deleteActivityById);
  */
 router.get('/notes/:id', getNoteById);
 
+
+/**
+ * @swagger
+ * /notes:
+ *   post:
+ *     tags:
+ *       - Note Routes
+ *     summary: Create a new note
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - content
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Note created successfully
+ *       400:
+ *         description: Invalid input
+ */
+router.post('/notes', verifyToken, createNote);
+
+
+
 /**
  * @swagger
  * /notes/{id}:
@@ -166,8 +240,6 @@ router.get('/notes/:id', getNoteById);
  *     tags:
  *       - Note Routes
  *     summary: Update a note
- *     security:
- *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -194,8 +266,6 @@ router.put('/notes/:id', verifyToken, updateNoteById);
  *     tags:
  *       - Note Routes
  *     summary: Delete a note
- *     security:
- *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -260,8 +330,6 @@ router.get('/tasks/:id', verifyToken, getTaskById);
  *     tags:
  *       - Task Routes
  *     summary: Get all tasks
- *     security:
- *       - ApiKeyAuth: []
  *     responses:
  *       200:
  *         description: A list of tasks
@@ -281,8 +349,6 @@ router.get('/tasks', verifyToken, getAllTasks);
  *     tags:
  *       - Task Routes
  *     summary: Update a task
- *     security:
- *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -309,8 +375,6 @@ router.put('/tasks/:id', verifyToken, updateTaskById);
  *     tags:
  *       - Task Routes
  *     summary: Delete a task
- *     security:
- *       - ApiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -369,3 +433,6 @@ router.post('/register', registerUser);
  *         description: User logged in
  */
 router.post('/login', loginUser);
+
+
+export default router;
