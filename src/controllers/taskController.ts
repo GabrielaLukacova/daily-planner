@@ -7,7 +7,7 @@ import { taskModel } from "../models/taskModel";
 export async function createTask(req: Request, res: Response) {
   try {
     const newTask = new taskModel({
-      Id: req.body.userId,
+      id: req.body.userId,
       title: req.body.title,
       isCompleted: req.body.isCompleted ?? false,
       highPriority: req.body.highPriority ?? false,
