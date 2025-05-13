@@ -8,8 +8,8 @@ import { connect, disconnect } from '../repository/database';
   export async function createNote(req: Request, res: Response) {
     try {
       const newNote = new noteModel({
-        id: req.body.userId,
-        text: req.body.title,
+        // id: req.body.userId,
+        text: req.body.text,
         date: req.body.date,
         _createdBy: req.body._createdBy,
       });

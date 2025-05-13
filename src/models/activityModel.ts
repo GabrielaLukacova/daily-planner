@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { Activity, repeatingType } from "../interfaces/activity";
 
 const activitySchema = new Schema<Activity>({
-    id: { type: String, required: true },
+    // id: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: false },
     date: { type: Date, required: true },

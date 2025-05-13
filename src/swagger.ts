@@ -43,9 +43,11 @@ const swaggerOptions = {
         },
         Task: {
           type: "object",
-          required: ["id", "title", "_createdBy"],
+          required: [
+            // "id",
+             "title", "_createdBy"],
           properties: {
-            id: { type: "string" }, 
+            // id: { type: "string" }, 
             title: { type: "string" },
             isCompleted: {
               type: "boolean",
@@ -61,7 +63,7 @@ const swaggerOptions = {
         Activity: {
           type: "object",
           required: [
-            "id",
+            // "id",
             "title",
             "date",
             "startTime",
@@ -69,7 +71,7 @@ const swaggerOptions = {
             "_createdBy"
           ],
           properties: {
-            id: { type: "string" }, 
+            // id: { type: "string" }, 
             title: { type: "string" },
             description: { type: "string" },  
             date: { type: "string", format: "date" },
@@ -87,9 +89,11 @@ const swaggerOptions = {
         },        
         Note: {
           type: "object",
-          required: [ "id", "text", "date", "_createdBy"],
+          required: [ 
+            // "id", 
+            "text", "date", "_createdBy"],
           properties: {
-            id: { type: "string" }, 
+            // id: { type: "string" }, 
             text: { type: "string" },
             date: { type: "string", format: "date" },
             _createdBy: { type: "string" },

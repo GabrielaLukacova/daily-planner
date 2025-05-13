@@ -108,16 +108,12 @@ router.get('/activities/query/:field/:value', verifyToken, getActivitiesByQuery)
  *           schema:
  *             type: object
  *             required:
- *               - id
  *               - title
  *               - date
  *               - startTime
  *               - endTime
  *               - _createdBy
  *             properties:
- *               id:
- *                 type: string
- *                 description: The unique identifier for the activity (auto-generated)
  *               title:
  *                 type: string
  *               description:
@@ -368,14 +364,10 @@ router.get('/notes/:id', verifyToken, getNoteById);
  *           schema:
  *             type: object
  *             required:
- *               - id
  *               - text
  *               - date
  *               - _createdBy
  *             properties:
- *               id:
- *                 type: string
- *                 description: MongoDB ObjectId (Auto-generated)
  *               text:
  *                 type: string
  *               date:
@@ -477,13 +469,9 @@ router.delete('/notes/:id', verifyToken, deleteNoteById);
  *           schema:
  *             type: object
  *             required:
- *               - id
  *               - title
  *               - _createdBy
  *             properties:
- *               id:
- *                 type: string
- *                 description: The unique identifier for the task (auto-generated)
  *               title:
  *                 type: string
  *                 description: The title of the task
