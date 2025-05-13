@@ -58,9 +58,10 @@ export async function startServer() {
 
   const PORT: number = parseInt(process.env.PORT as string) || 4000;
   app.listen(PORT, () => {
-    console.log(`🚀 Server is running at http://localhost:${PORT}`);
-    console.log(`📚 Swagger docs available at http://localhost:${PORT}/api-docs`);
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`📚 Swagger docs available at /api-docs`);
   });
+
 }
 
 export default app;
