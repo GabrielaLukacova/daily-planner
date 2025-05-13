@@ -12,13 +12,15 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:4000",
+        url: "http://localhost:4000/api",
         description: "Local server",
       },
-      {
-        url: "https://ments-api-2t08.onrender.com", // change link later
-        description: "Production server",
-      },
+
+      
+      // {
+      //   url: "https://ments-api-2t08.onrender.com", // change link later
+      //   description: "Production server",
+      // },
     ],
     components: {
       securitySchemes: {

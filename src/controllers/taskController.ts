@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import { taskModel } from "../models/taskModel";
-import { connect, disconnect } from "../repository/database";
 
 /**
  * Create a new task
  */
 export async function createTask(req: Request, res: Response) {
   try {
-    await connect();
     const newTask = new taskModel({
       userId: req.body.userId,
       title: req.body.title,
@@ -17,10 +15,12 @@ export async function createTask(req: Request, res: Response) {
 
     const savedTask = await newTask.save();
     res.status(201).json(savedTask);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to create task", error });
-  } finally {
-    await disconnect();
+  } catch (error: any) {
+    console.error("Failed to create task:", error.message);
+    res.status(500).json({
+      message: "Failed to create task",
+      error: error.message || error,
+    });
   }
 }
 
@@ -29,13 +29,13 @@ export async function createTask(req: Request, res: Response) {
  */
 export async function getAllTasks(req: Request, res: Response) {
   try {
-    await connect();
     const tasks = await taskModel.find();
     res.status(200).json(tasks);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch tasks", error });
-  } finally {
-    await disconnect();
+  } catch (error: any) {
+    res.status(500).json({
+      message: "Failed to fetch tasks",
+      error: error.message || error,
+    });
   }
 }
 
@@ -44,7 +44,6 @@ export async function getAllTasks(req: Request, res: Response) {
  */
 export async function getTaskById(req: Request, res: Response) {
   try {
-    await connect();
     const task = await taskModel.findById(req.params.id);
 
     if (!task) {
@@ -53,10 +52,11 @@ export async function getTaskById(req: Request, res: Response) {
     }
 
     res.status(200).json(task);
-  } catch (error) {
-    res.status(500).json({ message: "Error retrieving task", error });
-  } finally {
-    await disconnect();
+  } catch (error: any) {
+    res.status(500).json({
+      message: "Error retrieving task",
+      error: error.message || error,
+    });
   }
 }
 
@@ -65,7 +65,6 @@ export async function getTaskById(req: Request, res: Response) {
  */
 export async function updateTaskById(req: Request, res: Response) {
   try {
-    await connect();
     const updatedTask = await taskModel.findByIdAndUpdate(
       req.params.id,
       {
@@ -82,10 +81,11 @@ export async function updateTaskById(req: Request, res: Response) {
     }
 
     res.status(200).json(updatedTask);
-  } catch (error) {
-    res.status(500).json({ message: "Error updating task", error });
-  } finally {
-    await disconnect();
+  } catch (error: any) {
+    res.status(500).json({
+      message: "Error updating task",
+      error: error.message || error,
+    });
   }
 }
 
@@ -94,7 +94,6 @@ export async function updateTaskById(req: Request, res: Response) {
  */
 export async function deleteTaskById(req: Request, res: Response) {
   try {
-    await connect();
     const deletedTask = await taskModel.findByIdAndDelete(req.params.id);
 
     if (!deletedTask) {
@@ -103,9 +102,11 @@ export async function deleteTaskById(req: Request, res: Response) {
     }
 
     res.status(200).json({ message: "Task deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Error deleting task", error });
-  } finally {
-    await disconnect();
+  } catch (error: any) {
+    res.status(500).json({
+      message: "Error deleting task",
+      error: error.message || error,
+    });
   }
 }
+

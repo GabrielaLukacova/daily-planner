@@ -91,9 +91,15 @@ import {
   
   /**
    * Middleware to verify token
+   * Looks for Authorization: Bearer <token>
    */
   export function verifyToken(req: Request, res: Response, next: NextFunction) {
-    const token = req.header("auth-token");
+    // Henter Authorization-headeren
+    const authHeader = req.header("Authorization");
+  
+    // Fjerner "Bearer " hvis det finnes
+    const token = authHeader?.replace("Bearer ", "");
+  
     if (!token) {
       res.status(401).json({ error: "Access denied. No token provided." });
       return;
