@@ -263,12 +263,15 @@ router.get('/notes/:id', getNoteById);
  *             required:
  *               - text
  *               - date
+ *               - _createdBy
  *             properties:
  *               text:
  *                 type: string
  *               date:
  *                 type: string
  *                 format: date-time
+ *               _createdBy:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Note created successfully
