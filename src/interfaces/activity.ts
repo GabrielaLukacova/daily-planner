@@ -1,6 +1,7 @@
 import { User } from "./user";
 
 export interface Activity extends Document {
+    id: string;
     title: string;
     description: string;
     date: Date;

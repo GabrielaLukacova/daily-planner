@@ -6,6 +6,7 @@ export async function createActivity(req: Request, res: Response) {
   try {
     await connect();
     const newActivity = new activityModel({
+      id: req.body.id,
       title: req.body.title,
       description: req.body.description,
       date: req.body.date,

@@ -3,6 +3,8 @@ import dotenvFlow from 'dotenv-flow';
 import { connect } from './repository/database';
 import { setupSwagger } from './swagger';
 import router from './routes'; 
+import cors from 'cors';
+
 
 // Load environment variables
 dotenvFlow.config();
@@ -22,9 +24,24 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Daily Planner API!');
 });
 
+/**
+ * Setup CORS handling to allow cross-origin requests
+ */
+function setupCors() {
+  app.use(cors({
+      origin: "*", // Allow requests from any origin
+      methods: 'GET, PUT, POST, DELETE', // Allowed HTTP methods
+      allowedHeaders: ['auth-token', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept'], // Allowed headers
+      credentials: true // Allow credentials
+  }));
+}
+
 // Start server
+
 export function startServer() {
-  connect();
+  setupCors();
+
+
 
   const PORT: number = parseInt(process.env.PORT as string) || 4000;
   app.listen(PORT, () => {

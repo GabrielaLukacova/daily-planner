@@ -11,6 +11,7 @@ export async function createTask(req: Request, res: Response) {
       title: req.body.title,
       isCompleted: req.body.isCompleted ?? false,
       highPriority: req.body.highPriority ?? false,
+      _createdBy: req.body._createdBy,
     });
 
     const savedTask = await newTask.save();

@@ -2,22 +2,27 @@ import { Request, Response } from 'express';
 import { noteModel } from '../models/noteModel';
 import { connect, disconnect } from '../repository/database';
 
-/**
- * Create a new note
- */
-export async function createNote(req: Request, res: Response) {
-  const data = req.body;
-  try {
-    await connect();
-    const note = new noteModel(data);
-    const result = await note.save();
-    res.status(201).send(result);
-  } catch {
-    res.status(500).send("Error creating note.");
-  } finally {
-    await disconnect();
+  /**
+   * Create a new note
+   */
+  export async function createNote(req: Request, res: Response) {
+    try {
+      const newNote = new noteModel({
+        userId: req.body.userId,
+        text: req.body.title,
+        date: req.body.date,
+        _createdBy: req.body._createdBy,
+      });
+      const savedNote = await newNote.save();
+      res.status(201).json(savedNote);
+    } catch (error: any) {
+      console.error("Failed to create note:", error.message);
+      res.status(500).json({
+        message: "Failed to create note",
+        error: error.message || error,
+      });
+    }
   }
-}
 
 /**
  * Get all notes
