@@ -8,7 +8,7 @@ import { connect, disconnect } from '../repository/database';
   export async function createNote(req: Request, res: Response) {
     try {
       const newNote = new noteModel({
-        userId: req.body.userId,
+        Id: req.body.userId,
         text: req.body.title,
         date: req.body.date,
         _createdBy: req.body._createdBy,
