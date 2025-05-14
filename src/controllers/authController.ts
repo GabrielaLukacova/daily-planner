@@ -1,16 +1,19 @@
-import { Request, Response, NextFunction, RequestHandler } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import Joi, { ValidationResult } from "joi";
+import Joi from "joi";
 
 import { userModel } from "../models/userModel";
 import { User } from "../interfaces/user";
+import { connect } from "../repository/database";
 
 /**
  * Register a new user
  */
-export const registerUser: RequestHandler = async (req, res) => {
+export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+    await connect();
+
     const { error } = validateUserRegistrationInfo(req.body);
     if (error) {
       res.status(400).json({ error: error.details[0].message });
@@ -36,15 +39,17 @@ export const registerUser: RequestHandler = async (req, res) => {
     res.status(201).json({ error: null, data: savedUser._id });
   } catch (error) {
     console.error("❌ Error registering user:", error);
-    res.status(500).json({ error: "Error registering user", details: error });
+    res.status(500).json({ error: "Server error during registration" });
   }
 };
 
 /**
  * Login existing user
  */
-export const loginUser: RequestHandler = async (req, res) => {
+export const loginUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+    await connect();
+
     const { error } = validateUserLoginInfo(req.body);
     if (error) {
       res.status(400).json({ error: error.details[0].message });
@@ -67,7 +72,7 @@ export const loginUser: RequestHandler = async (req, res) => {
       {
         name: user.name,
         email: user.email,
-        id: user.id
+        id: user.id,
       },
       process.env.TOKEN_SECRET as string,
       { expiresIn: "2h" }
@@ -75,22 +80,24 @@ export const loginUser: RequestHandler = async (req, res) => {
 
     res.status(200).header("auth-token", token).json({
       error: null,
-      data: { userId: user.id, token }
+      data: { userId: user.id, token },
     });
   } catch (error) {
     console.error("❌ Error logging in user:", error);
-    res.status(500).json({ error: "Error logging in user", details: error });
+    res.status(500).json({ error: "Server error during login" });
   }
 };
 
 /**
  * Middleware to verify token (supports both 'Authorization' and 'auth-token')
  */
-export const verifyToken: RequestHandler = (req, res, next) => {
+export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   const bearer = req.header("Authorization");
   const authToken = req.header("auth-token");
 
-  const token = bearer?.startsWith("Bearer ") ? bearer.slice(7) : authToken;
+  const token = bearer?.startsWith("Bearer ")
+    ? bearer.slice(7)
+    : authToken;
 
   if (!token) {
     res.status(401).json({ error: "Access denied. No token provided." });
@@ -101,18 +108,18 @@ export const verifyToken: RequestHandler = (req, res, next) => {
     jwt.verify(token, process.env.TOKEN_SECRET as string);
     next();
   } catch {
-    res.status(401).json({ error: "Invalid token." });
+    res.status(401).send("Invalid Token");
   }
 };
 
 /**
  * Validate user registration info
  */
-function validateUserRegistrationInfo(data: User): ValidationResult {
+function validateUserRegistrationInfo(data: User) {
   const schema = Joi.object({
     name: Joi.string().min(6).max(255).required(),
     email: Joi.string().email().min(6).max(255).required(),
-    password: Joi.string().min(6).max(20).required()
+    password: Joi.string().min(6).max(20).required(),
   });
 
   return schema.validate(data);
@@ -121,12 +128,13 @@ function validateUserRegistrationInfo(data: User): ValidationResult {
 /**
  * Validate login info
  */
-function validateUserLoginInfo(data: User): ValidationResult {
+function validateUserLoginInfo(data: User) {
   const schema = Joi.object({
     email: Joi.string().email().min(6).max(255).required(),
-    password: Joi.string().min(6).max(20).required()
+    password: Joi.string().min(6).max(20).required(),
   });
 
   return schema.validate(data);
 }
+
 
