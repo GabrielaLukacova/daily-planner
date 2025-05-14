@@ -13,13 +13,16 @@ const app: Application = express();
 app.use(express.json());
 
 /**
- * Enable CORS
+ * ✅ Enable CORS early
  */
 function setupCors() {
   app.use(
     cors({
-      origin: "*",
-      methods: "GET, PUT, POST, DELETE",
+      origin: [
+        "http://localhost:5173", // lokal frontend
+        "https://daily-planner-front.onrender.com" // 🔁 bytt til faktisk frontend-URL om nødvendig
+      ],
+      methods: "GET,PUT,POST,DELETE",
       allowedHeaders: [
         "auth-token",
         "Origin",
@@ -31,6 +34,9 @@ function setupCors() {
     })
   );
 }
+
+// Setup CORS before anything else
+setupCors();
 
 // Swagger docs
 setupSwagger(app);
@@ -45,8 +51,6 @@ app.get("/", (req: Request, res: Response) => {
 
 // Start server
 export async function startServer() {
-  setupCors();
-
   try {
     await connect();
     console.log("✅ MongoDB connection established");
@@ -61,7 +65,6 @@ export async function startServer() {
     console.log(`🚀 Server is running on port ${PORT}`);
     console.log(`📚 Swagger docs available at /api-docs`);
   });
-
 }
 
 export default app;
