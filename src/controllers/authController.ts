@@ -1,8 +1,4 @@
-import {
-  type Request,
-  type Response,
-  type NextFunction
-} from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import Joi, { ValidationResult } from "joi";
@@ -13,7 +9,7 @@ import { User } from "../interfaces/user";
 /**
  * Register a new user
  */
-export async function registerUser(req: Request, res: Response) {
+export const registerUser: RequestHandler = async (req, res) => {
   try {
     const { error } = validateUserRegistrationInfo(req.body);
     if (error) {
@@ -42,13 +38,12 @@ export async function registerUser(req: Request, res: Response) {
     console.error("❌ Error registering user:", error);
     res.status(500).json({ error: "Error registering user", details: error });
   }
-}
-
+};
 
 /**
  * Login existing user
  */
-export async function loginUser(req: Request, res: Response) {
+export const loginUser: RequestHandler = async (req, res) => {
   try {
     const { error } = validateUserLoginInfo(req.body);
     if (error) {
@@ -83,22 +78,19 @@ export async function loginUser(req: Request, res: Response) {
       data: { userId: user.id, token }
     });
   } catch (error) {
-    res.status(500).send("Error logging in user. Error: " + error);
+    console.error("❌ Error logging in user:", error);
+    res.status(500).json({ error: "Error logging in user", details: error });
   }
-}
+};
 
 /**
  * Middleware to verify token (supports both 'Authorization' and 'auth-token')
  */
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
-  // Try to read from both headers
+export const verifyToken: RequestHandler = (req, res, next) => {
   const bearer = req.header("Authorization");
   const authToken = req.header("auth-token");
 
-  // If 'Authorization' is used, remove 'Bearer ' prefix
-  const token = bearer?.startsWith("Bearer ")
-    ? bearer.slice(7)
-    : authToken;
+  const token = bearer?.startsWith("Bearer ") ? bearer.slice(7) : authToken;
 
   if (!token) {
     res.status(401).json({ error: "Access denied. No token provided." });
@@ -109,9 +101,9 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     jwt.verify(token, process.env.TOKEN_SECRET as string);
     next();
   } catch {
-    res.status(401).send("Invalid Token");
+    res.status(401).json({ error: "Invalid token." });
   }
-}
+};
 
 /**
  * Validate user registration info
@@ -137,3 +129,4 @@ function validateUserLoginInfo(data: User): ValidationResult {
 
   return schema.validate(data);
 }
+
