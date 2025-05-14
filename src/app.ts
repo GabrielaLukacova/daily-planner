@@ -25,6 +25,7 @@ function setupCors() {
       methods: "GET,PUT,POST,DELETE",
       allowedHeaders: [
         "auth-token",
+        "Authorization",
         "Origin",
         "X-Requested-With",
         "Content-Type",
