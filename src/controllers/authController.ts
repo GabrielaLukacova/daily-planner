@@ -15,25 +15,21 @@ import { User } from "../interfaces/user";
  */
 export async function registerUser(req: Request, res: Response) {
   try {
-    // Validate input
     const { error } = validateUserRegistrationInfo(req.body);
     if (error) {
       res.status(400).json({ error: error.details[0].message });
       return;
     }
 
-    // Check if user exists
     const emailExists = await userModel.findOne({ email: req.body.email });
     if (emailExists) {
       res.status(400).json({ error: "Email already exists." });
       return;
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const passwordHashed = await bcrypt.hash(req.body.password, salt);
 
-    // Create and save user
     const userObject = new userModel({
       name: req.body.name,
       email: req.body.email,
@@ -90,15 +86,17 @@ export async function loginUser(req: Request, res: Response) {
 }
 
 /**
- * Middleware to verify token
- * Looks for Authorization: Bearer <token>
+ * Middleware to verify token (supports both 'Authorization' and 'auth-token')
  */
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
-  // Henter Authorization-headeren
-  const authHeader = req.header("Authorization");
+  // Try to read from both headers
+  const bearer = req.header("Authorization");
+  const authToken = req.header("auth-token");
 
-  // Fjerner "Bearer " hvis det finnes
-  const token = authHeader?.replace("Bearer ", "");
+  // If 'Authorization' is used, remove 'Bearer ' prefix
+  const token = bearer?.startsWith("Bearer ")
+    ? bearer.slice(7)
+    : authToken;
 
   if (!token) {
     res.status(401).json({ error: "Access denied. No token provided." });
