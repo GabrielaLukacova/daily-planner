@@ -13,34 +13,31 @@ const app: Application = express();
 app.use(express.json());
 
 /**
- * ✅ Enable CORS
- * Allows requests from both local dev and deployed frontend.
+ * ✅ Enable CORS before routes
  */
-function setupCors() {
-  app.use(
-    cors({
-      origin: [
-        "http://localhost:5173", // Local development frontend
-        "https://daily-planner-front.onrender.com", // Replace with actual deployed frontend URL if needed
-      ],
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization", // For bearer token (e.g. in notes)
-        "auth-token",    // For login/register
-        "Origin",
-        "X-Requested-With",
-        "Accept",
-      ],
-      credentials: true,
-    })
-  );
-}
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // Dev frontend
+      "https://daily-planner-front.onrender.com", // Prod frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization", // for Bearer token
+      "auth-token",    // for custom token header
+      "Origin",
+      "X-Requested-With",
+      "Accept",
+    ],
+    credentials: true,
+  })
+);
 
-// Initialize CORS before any routes
-setupCors();
+// ✅ Respond to preflight requests
+app.options("*", cors());
 
-// Swagger documentation
+// Swagger docs
 setupSwagger(app);
 
 // Mount routes
@@ -51,14 +48,13 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Daily Planner API!");
 });
 
-// Start server and connect DB
+// Start server
 export async function startServer() {
   try {
     await connect();
     console.log("✅ MongoDB connection established");
   } catch (error) {
     console.error("❌ Failed to connect to MongoDB. Server will not start.");
-    console.error(error);
     process.exit(1);
   }
 
@@ -70,4 +66,3 @@ export async function startServer() {
 }
 
 export default app;
-
