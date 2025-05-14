@@ -33,15 +33,17 @@ export async function registerUser(req: Request, res: Response) {
     const userObject = new userModel({
       name: req.body.name,
       email: req.body.email,
-      password: passwordHashed
+      password: passwordHashed,
     });
 
     const savedUser = await userObject.save();
     res.status(201).json({ error: null, data: savedUser._id });
   } catch (error) {
-    res.status(500).send("Error registering user. Error: " + error);
+    console.error("❌ Error registering user:", error);
+    res.status(500).json({ error: "Error registering user", details: error });
   }
 }
+
 
 /**
  * Login existing user
