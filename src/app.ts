@@ -4,6 +4,7 @@ import { connect } from "./repository/database";
 import { setupSwagger } from "./swagger";
 import router from "./routes";
 import cors from "cors";
+import { startCron } from "./controllers/devController";
 
 // Load environment variables
 dotenvFlow.config();
@@ -53,6 +54,7 @@ app.options("*", cors(corsOptions)); // Preflight support
 // Swagger docs
 setupSwagger(app);
 
+app.get("/startCron/:duration", startCron);
 // Mount routes
 app.use("/api", router);
 
