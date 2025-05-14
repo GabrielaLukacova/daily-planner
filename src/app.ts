@@ -17,10 +17,17 @@ app.use(express.json());
  */
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // Dev frontend
-      "https://daily-planner-front.onrender.com", // Prod frontend
-    ],
+    origin: (origin, callback) => {
+      // Allow requests from the development and production frontends
+      if (
+        origin === "http://localhost:5173" || // Dev frontend
+        origin === "https://daily-planner-front.onrender.com" // Prod frontend
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"), false);
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
@@ -30,7 +37,7 @@ app.use(
       "X-Requested-With",
       "Accept",
     ],
-    credentials: true,
+    credentials: true, // Enable credentials for cookies/sessions
   })
 );
 
