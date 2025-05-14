@@ -17,6 +17,8 @@ app.use(express.json());
  */
 const allowedOrigins = [
   "http://localhost:5173", // Dev frontend
+  "http://localhost:5174",
+  "http://localhost:5175",
   "https://daily-planner-front.onrender.com", // Prod frontend
   "https://daily-planner-kyar.onrender.com", // Backend domain if frontend hits this
 ];
