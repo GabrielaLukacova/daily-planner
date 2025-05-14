@@ -3,8 +3,8 @@ import cron, { ScheduledTask } from "node-cron";
 import https from "https";
 
 // Settings
-const MINUTES_DELTA = 1;
-const URL = "https://ments-api-kex4.onrender.com/api/";
+const MINUTES_DELTA = 100;
+const URL = "https://daily-planner-kyar.onrender.com/api/";
 let counter = 0;
 let task: ScheduledTask | null = null;
 
