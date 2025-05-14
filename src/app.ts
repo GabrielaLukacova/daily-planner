@@ -13,22 +13,23 @@ const app: Application = express();
 app.use(express.json());
 
 /**
- * ✅ Enable CORS early
+ * ✅ Enable CORS
+ * Allows requests from both local dev and deployed frontend.
  */
 function setupCors() {
   app.use(
     cors({
       origin: [
-        "http://localhost:5173", // lokal frontend
-        "https://daily-planner-front.onrender.com" // 🔁 bytt til faktisk frontend-URL om nødvendig
+        "http://localhost:5173", // Local development frontend
+        "https://daily-planner-front.onrender.com", // Replace with actual deployed frontend URL if needed
       ],
-      methods: "GET,PUT,POST,DELETE",
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       allowedHeaders: [
-        "auth-token",
-        "Authorization",
+        "Content-Type",
+        "Authorization", // For bearer token (e.g. in notes)
+        "auth-token",    // For login/register
         "Origin",
         "X-Requested-With",
-        "Content-Type",
         "Accept",
       ],
       credentials: true,
@@ -36,13 +37,13 @@ function setupCors() {
   );
 }
 
-// Setup CORS before anything else
+// Initialize CORS before any routes
 setupCors();
 
-// Swagger docs
+// Swagger documentation
 setupSwagger(app);
 
-// Mount all routes under /api
+// Mount routes
 app.use("/api", router);
 
 // Root route
@@ -50,7 +51,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Daily Planner API!");
 });
 
-// Start server
+// Start server and connect DB
 export async function startServer() {
   try {
     await connect();
@@ -69,3 +70,4 @@ export async function startServer() {
 }
 
 export default app;
+
