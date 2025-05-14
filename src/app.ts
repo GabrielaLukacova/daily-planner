@@ -18,6 +18,7 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173", // Dev frontend
   "https://daily-planner-front.onrender.com", // Prod frontend
+  "https://daily-planner-kyar.onrender.com",
 ];
 
 const corsOptions = {
