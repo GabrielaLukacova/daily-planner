@@ -17,10 +17,10 @@ const swaggerOptions = {
       },
 
       
-      // {
-      //   url: "https://ments-api-2t08.onrender.com", // change link later
-      //   description: "Production server",
-      // },
+      {
+        url: "https://daily-planner-kyar.onrender.com", 
+        description: "Production server",
+      },
     ],
     components: {
       securitySchemes: {
