@@ -13,32 +13,36 @@ const app: Application = express();
 app.use(express.json());
 
 /**
- * ✅ Stable CORS configuration
+ * ✅ Stable CORS configuration with logging
  */
 const allowedOrigins = [
   "http://localhost:5173", // Dev frontend
   "https://daily-planner-front.onrender.com", // Prod frontend
-  "https://daily-planner-kyar.onrender.com",
+  "https://daily-planner-kyar.onrender.com", // Backend domain if frontend hits this
 ];
 
 const corsOptions = {
   origin: function (origin: any, callback: any) {
+    console.log("🔍 Incoming origin:", origin);
+
     if (!origin || allowedOrigins.includes(origin)) {
+      console.log("✅ Allowed by CORS:", origin);
       callback(null, true);
     } else {
+      console.log("❌ Blocked by CORS:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
-    "Authorization", // for Bearer token
-    "auth-token",    // for custom token header
+    "Authorization",
+    "auth-token",
     "Origin",
     "X-Requested-With",
     "Accept",
   ],
-  credentials: true, // allow cookies/auth headers
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -73,4 +77,5 @@ export async function startServer() {
 }
 
 export default app;
+
 
