@@ -26,19 +26,25 @@ export async function createTask(req: Request, res: Response) {
 }
 
 /**
- * Get all tasks
+ * Get all tasks (optionally filtered by userId)
  */
 export async function getAllTasks(req: Request, res: Response) {
   try {
-    const tasks = await taskModel.find();
+    const userId = req.query.userId as string | undefined;
+
+    const query = userId ? { _createdBy: userId } : {};
+    const tasks = await taskModel.find(query).sort({ createdAt: -1 });
+
     res.status(200).json(tasks);
   } catch (error: any) {
+    console.error("❌ Failed to fetch tasks:", error.message);
     res.status(500).json({
       message: "Failed to fetch tasks",
       error: error.message || error,
     });
   }
 }
+
 
 /**
  * Get a task by ID
