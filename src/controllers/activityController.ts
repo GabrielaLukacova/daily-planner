@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import { activityModel } from '../models/activityModel';
 import { connect, disconnect } from '../repository/database';
 
+/**
+ * Create a new activity
+ */
 export async function createActivity(req: Request, res: Response) {
   try {
     await connect();
+
     const newActivity = new activityModel({
-      // id: req.body.id,
       title: req.body.title,
       description: req.body.description,
       date: req.body.date,
@@ -28,13 +31,17 @@ export async function createActivity(req: Request, res: Response) {
 }
 
 /**
- * Get all activities
+ * Get all activities (optionally filtered by userId)
  */
 export async function getAllActivities(req: Request, res: Response) {
   try {
     await connect();
-    const result = await activityModel.find({});
-    res.status(200).send(result);
+
+    const userId = req.query.userId as string | undefined;
+    const query = userId ? { _createdBy: userId } : {};
+
+    const result = await activityModel.find(query).sort({ date: -1 });
+    res.status(200).json(result);
   } catch {
     res.status(500).send("Error retrieving activities.");
   } finally {
@@ -43,7 +50,7 @@ export async function getAllActivities(req: Request, res: Response) {
 }
 
 /**
- * Get specific activity by id
+ * Get specific activity by ID
  */
 export async function getActivityById(req: Request, res: Response) {
   try {
@@ -76,7 +83,7 @@ export async function getActivitiesByQuery(req: Request, res: Response) {
 }
 
 /**
- * Update activity by id
+ * Update activity by ID
  */
 export async function updateActivityById(req: Request, res: Response) {
   const id = req.params.id;
@@ -96,7 +103,7 @@ export async function updateActivityById(req: Request, res: Response) {
 }
 
 /**
- * Delete activity by id
+ * Delete activity by ID
  */
 export async function deleteActivityById(req: Request, res: Response) {
   const id = req.params.id;
@@ -114,3 +121,4 @@ export async function deleteActivityById(req: Request, res: Response) {
     await disconnect();
   }
 }
+
