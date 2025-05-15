@@ -476,18 +476,14 @@ router.delete('/notes/:id', verifyToken, deleteNoteById);
  *             properties:
  *               title:
  *                 type: string
- *                 description: The title of the task
  *               isCompleted:
  *                 type: boolean
  *                 default: false
- *                 description: Indicates whether the task is completed
  *               highPriority:
  *                 type: boolean
  *                 default: false
- *                 description: Indicates whether the task has high priority
  *               _createdBy:
  *                 type: string
- *                 description: The ID of the user who created the task
  *     responses:
  *       '201':
  *         description: Task successfully created
@@ -495,34 +491,8 @@ router.delete('/notes/:id', verifyToken, deleteNoteById);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Task'
- *       '400':
- *         description: Invalid input
  */
-router.post('/tasks', verifyToken, (req, res) => {
-  createTask(req, res);
-});
-
-/**
- * @swagger
- * /tasks/{id}:
- *   get:
- *     tags:
- *       - Task Routes
- *     summary: Get a task by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The task ID
- *     responses:
- *       '200':
- *         description: Task data
- */
-router.get('/tasks/:id', verifyToken, (req, res) => {
-  getTaskById(req, res);
-});
+router.post('/tasks', verifyToken, createTask);
 
 /**
  * @swagger
@@ -541,9 +511,26 @@ router.get('/tasks/:id', verifyToken, (req, res) => {
  *               items:
  *                 $ref: "#/components/schemas/Task"
  */
-router.get('/tasks', verifyToken, (req, res) => {
-  getAllTasks(req, res);
-});
+router.get('/tasks', verifyToken, getAllTasks);
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   get:
+ *     tags:
+ *       - Task Routes
+ *     summary: Get a task by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Task found
+ */
+router.get('/tasks/:id', verifyToken, getTaskById);
 
 /**
  * @swagger
@@ -556,7 +543,6 @@ router.get('/tasks', verifyToken, (req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         description: Task ID
  *         schema:
  *           type: string
  *     requestBody:
@@ -569,9 +555,7 @@ router.get('/tasks', verifyToken, (req, res) => {
  *       '200':
  *         description: Task updated
  */
-router.put('/tasks/:id', verifyToken, (req, res) => {
-  updateTaskById(req, res);
-});
+router.put('/tasks/:id', verifyToken, updateTaskById);
 
 /**
  * @swagger
@@ -584,16 +568,14 @@ router.put('/tasks/:id', verifyToken, (req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         description: Task ID
  *         schema:
  *           type: string
  *     responses:
  *       '200':
  *         description: Task deleted
  */
-router.delete('/tasks/:id', verifyToken, (req, res) => {
-  deleteTaskById(req, res);
-});
+router.delete('/tasks/:id', verifyToken, deleteTaskById);
+
 
 
 
