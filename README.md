@@ -1,3 +1,4 @@
+# ![PlanIt Logo](../frontend/src/media/planit_app_logo.jpeg)  
 # PlanIt - Daily productivity planner - REST FULL API
 
 ## About This Project
