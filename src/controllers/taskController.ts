@@ -5,15 +5,22 @@ import { connect, disconnect } from "../repository/database";
 /**
  * Create a new task
  */
-export async function createTask(req: Request, res: Response) {
+export async function createTask(req: Request, res: Response): Promise<void> {
   try {
     await connect();
 
+    const { title, isCompleted = false, highPriority = false, _createdBy } = req.body;
+
+    if (!title || !_createdBy) {
+      res.status(400).json({ message: "Missing required fields: title or _createdBy" });
+      return;
+    }
+
     const newTask = new taskModel({
-      title: req.body.title,
-      isCompleted: req.body.isCompleted ?? false,
-      highPriority: req.body.highPriority ?? false,
-      _createdBy: req.body._createdBy,
+      title,
+      isCompleted,
+      highPriority,
+      _createdBy,
     });
 
     const savedTask = await newTask.save();
@@ -32,7 +39,7 @@ export async function createTask(req: Request, res: Response) {
 /**
  * Get all tasks for a specific user
  */
-export async function getAllTasks(req: Request, res: Response) {
+export async function getAllTasks(req: Request, res: Response): Promise<void> {
   try {
     await connect();
 
@@ -45,7 +52,7 @@ export async function getAllTasks(req: Request, res: Response) {
     const tasks = await taskModel.find({ _createdBy: userId });
     res.status(200).json(tasks);
   } catch (error: any) {
-    console.error("Failed to fetch tasks:", error);
+    console.error("Failed to fetch tasks:", error.message);
     res.status(500).json({
       message: "Failed to fetch tasks",
       error: error.message || error,
@@ -58,7 +65,7 @@ export async function getAllTasks(req: Request, res: Response) {
 /**
  * Get a task by ID
  */
-export async function getTaskById(req: Request, res: Response) {
+export async function getTaskById(req: Request, res: Response): Promise<void> {
   try {
     await connect();
 
@@ -71,6 +78,7 @@ export async function getTaskById(req: Request, res: Response) {
 
     res.status(200).json(task);
   } catch (error: any) {
+    console.error("Error retrieving task:", error.message);
     res.status(500).json({
       message: "Error retrieving task",
       error: error.message || error,
@@ -83,17 +91,15 @@ export async function getTaskById(req: Request, res: Response) {
 /**
  * Update a task by ID
  */
-export async function updateTaskById(req: Request, res: Response) {
+export async function updateTaskById(req: Request, res: Response): Promise<void> {
   try {
     await connect();
 
+    const { title, isCompleted, highPriority } = req.body;
+
     const updatedTask = await taskModel.findByIdAndUpdate(
       req.params.id,
-      {
-        title: req.body.title,
-        isCompleted: req.body.isCompleted,
-        highPriority: req.body.highPriority,
-      },
+      { title, isCompleted, highPriority },
       { new: true }
     );
 
@@ -104,6 +110,7 @@ export async function updateTaskById(req: Request, res: Response) {
 
     res.status(200).json(updatedTask);
   } catch (error: any) {
+    console.error("Error updating task:", error.message);
     res.status(500).json({
       message: "Error updating task",
       error: error.message || error,
@@ -116,7 +123,7 @@ export async function updateTaskById(req: Request, res: Response) {
 /**
  * Delete a task by ID
  */
-export async function deleteTaskById(req: Request, res: Response) {
+export async function deleteTaskById(req: Request, res: Response): Promise<void> {
   try {
     await connect();
 
@@ -129,6 +136,7 @@ export async function deleteTaskById(req: Request, res: Response) {
 
     res.status(200).json({ message: "Task deleted successfully" });
   } catch (error: any) {
+    console.error("Error deleting task:", error.message);
     res.status(500).json({
       message: "Error deleting task",
       error: error.message || error,
