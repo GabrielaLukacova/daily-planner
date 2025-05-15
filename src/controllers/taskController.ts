@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import { taskModel } from "../models/taskModel";
+import { connect, disconnect } from "../repository/database";
 
 /**
  * Create a new task
  */
 export async function createTask(req: Request, res: Response) {
   try {
+    await connect();
+
     const newTask = new taskModel({
-      // id: req.body.userId,
       title: req.body.title,
       isCompleted: req.body.isCompleted ?? false,
       highPriority: req.body.highPriority ?? false,
@@ -22,6 +24,8 @@ export async function createTask(req: Request, res: Response) {
       message: "Failed to create task",
       error: error.message || error,
     });
+  } finally {
+    await disconnect();
   }
 }
 
@@ -30,6 +34,8 @@ export async function createTask(req: Request, res: Response) {
  */
 export async function getAllTasks(req: Request, res: Response) {
   try {
+    await connect();
+
     const tasks = await taskModel.find();
     res.status(200).json(tasks);
   } catch (error: any) {
@@ -37,6 +43,8 @@ export async function getAllTasks(req: Request, res: Response) {
       message: "Failed to fetch tasks",
       error: error.message || error,
     });
+  } finally {
+    await disconnect();
   }
 }
 
@@ -45,6 +53,8 @@ export async function getAllTasks(req: Request, res: Response) {
  */
 export async function getTaskById(req: Request, res: Response) {
   try {
+    await connect();
+
     const task = await taskModel.findById(req.params.id);
 
     if (!task) {
@@ -58,6 +68,8 @@ export async function getTaskById(req: Request, res: Response) {
       message: "Error retrieving task",
       error: error.message || error,
     });
+  } finally {
+    await disconnect();
   }
 }
 
@@ -66,6 +78,8 @@ export async function getTaskById(req: Request, res: Response) {
  */
 export async function updateTaskById(req: Request, res: Response) {
   try {
+    await connect();
+
     const updatedTask = await taskModel.findByIdAndUpdate(
       req.params.id,
       {
@@ -87,6 +101,8 @@ export async function updateTaskById(req: Request, res: Response) {
       message: "Error updating task",
       error: error.message || error,
     });
+  } finally {
+    await disconnect();
   }
 }
 
@@ -95,6 +111,8 @@ export async function updateTaskById(req: Request, res: Response) {
  */
 export async function deleteTaskById(req: Request, res: Response) {
   try {
+    await connect();
+
     const deletedTask = await taskModel.findByIdAndDelete(req.params.id);
 
     if (!deletedTask) {
@@ -108,6 +126,7 @@ export async function deleteTaskById(req: Request, res: Response) {
       message: "Error deleting task",
       error: error.message || error,
     });
+  } finally {
+    await disconnect();
   }
 }
-
