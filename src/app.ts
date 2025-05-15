@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import dotenvFlow from "dotenv-flow";
 import cors from "cors";
-import { connect } from "./repository/database"; 
+import { connect } from "./repository/database";
 import { setupSwagger } from "./swagger";
 import { startCron } from "./controllers/devController";
 
@@ -11,7 +11,7 @@ dotenvFlow.config();
 // Start server
 export async function startServer() {
   try {
-    console.log("🌐 Connecting to MongoDB:", process.env.DBHOST);
+    console.log("🌐 Connecting to MongoDB...");
     await connect();
     console.log("✅ MongoDB connection established");
   } catch (error) {
@@ -82,6 +82,4 @@ export async function startServer() {
 }
 
 export default startServer;
-
-
 
