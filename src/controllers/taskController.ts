@@ -4,10 +4,9 @@ import { taskModel } from "../models/taskModel";
 /**
  * Create a new task
  */
-export async function createTask(req: Request, res: Response) {
+export async function createTask(req: Request, res: Response): Promise<void> {
   try {
     const newTask = new taskModel({
-      // id: req.body.userId,
       title: req.body.title,
       isCompleted: req.body.isCompleted ?? false,
       highPriority: req.body.highPriority ?? false,
@@ -17,7 +16,7 @@ export async function createTask(req: Request, res: Response) {
     const savedTask = await newTask.save();
     res.status(201).json(savedTask);
   } catch (error: any) {
-    console.error("Failed to create task:", error.message);
+    console.error("❌ Failed to create task:", error.message);
     res.status(500).json({
       message: "Failed to create task",
       error: error.message || error,
@@ -28,13 +27,12 @@ export async function createTask(req: Request, res: Response) {
 /**
  * Get all tasks (optionally filtered by userId)
  */
-export async function getAllTasks(req: Request, res: Response) {
+export async function getAllTasks(req: Request, res: Response): Promise<void> {
   try {
     const userId = req.query.userId as string | undefined;
-
     const query = userId ? { _createdBy: userId } : {};
-    const tasks = await taskModel.find(query).sort({ createdAt: -1 });
 
+    const tasks = await taskModel.find(query).sort({ createdAt: -1 });
     res.status(200).json(tasks);
   } catch (error: any) {
     console.error("❌ Failed to fetch tasks:", error.message);
@@ -45,11 +43,10 @@ export async function getAllTasks(req: Request, res: Response) {
   }
 }
 
-
 /**
  * Get a task by ID
  */
-export async function getTaskById(req: Request, res: Response) {
+export async function getTaskById(req: Request, res: Response): Promise<void> {
   try {
     const task = await taskModel.findById(req.params.id);
 
@@ -70,7 +67,7 @@ export async function getTaskById(req: Request, res: Response) {
 /**
  * Update a task by ID
  */
-export async function updateTaskById(req: Request, res: Response) {
+export async function updateTaskById(req: Request, res: Response): Promise<void> {
   try {
     const updatedTask = await taskModel.findByIdAndUpdate(
       req.params.id,
@@ -99,7 +96,7 @@ export async function updateTaskById(req: Request, res: Response) {
 /**
  * Delete a task by ID
  */
-export async function deleteTaskById(req: Request, res: Response) {
+export async function deleteTaskById(req: Request, res: Response): Promise<void> {
   try {
     const deletedTask = await taskModel.findByIdAndDelete(req.params.id);
 
@@ -116,4 +113,6 @@ export async function deleteTaskById(req: Request, res: Response) {
     });
   }
 }
+
+
 

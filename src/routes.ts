@@ -34,8 +34,6 @@ export { router };
 
 /** ------------- ACTIVITY ROUTES ------------- */
 
-/** ------------- ACTIVITY ROUTES ------------- */
-
 /**
  * @swagger
  * /activities/query/{field}/{value}:
@@ -297,8 +295,13 @@ router.delete('/activities/:id', verifyToken, deleteActivityById);
 
 
 router.get('/tasks', verifyToken, getAllTasks);
-router.put('/tasks/:id', verifyToken, updateTaskById);
-router.delete('/tasks/:id', verifyToken, deleteTaskById);
+router.put('/tasks/:id', verifyToken, async (req, res) => {
+  await updateTaskById(req, res);
+});
+
+router.delete('/tasks/:id', verifyToken, async (req, res) => {
+  await deleteTaskById(req, res);
+});
 
 
 
@@ -452,7 +455,6 @@ router.delete('/notes/:id', verifyToken, deleteNoteById);
 
 
 
-
 /** ------------- TASK ROUTES ------------- */
 
 /**
@@ -496,8 +498,9 @@ router.delete('/notes/:id', verifyToken, deleteNoteById);
  *       '400':
  *         description: Invalid input
  */
-router.post('/tasks', verifyToken, createTask);
-
+router.post('/tasks', verifyToken, (req, res) => {
+  createTask(req, res);
+});
 
 /**
  * @swagger
@@ -517,7 +520,9 @@ router.post('/tasks', verifyToken, createTask);
  *       '200':
  *         description: Task data
  */
-router.get('/tasks/:id', verifyToken, getTaskById);
+router.get('/tasks/:id', verifyToken, (req, res) => {
+  getTaskById(req, res);
+});
 
 /**
  * @swagger
@@ -536,7 +541,9 @@ router.get('/tasks/:id', verifyToken, getTaskById);
  *               items:
  *                 $ref: "#/components/schemas/Task"
  */
-router.get('/tasks', verifyToken, getAllTasks);
+router.get('/tasks', verifyToken, (req, res) => {
+  getAllTasks(req, res);
+});
 
 /**
  * @swagger
@@ -562,7 +569,9 @@ router.get('/tasks', verifyToken, getAllTasks);
  *       '200':
  *         description: Task updated
  */
-router.put('/tasks/:id', verifyToken, updateTaskById);
+router.put('/tasks/:id', verifyToken, (req, res) => {
+  updateTaskById(req, res);
+});
 
 /**
  * @swagger
@@ -582,7 +591,10 @@ router.put('/tasks/:id', verifyToken, updateTaskById);
  *       '200':
  *         description: Task deleted
  */
-router.delete('/tasks/:id', verifyToken, deleteTaskById);
+router.delete('/tasks/:id', verifyToken, (req, res) => {
+  deleteTaskById(req, res);
+});
+
 
 
 /** ------------- USER ROUTES ------------- */
