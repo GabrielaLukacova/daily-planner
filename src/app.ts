@@ -11,11 +11,11 @@ dotenvFlow.config();
 // Start server
 export async function startServer() {
   try {
-    console.log("🌐 Connecting to MongoDB...");
+    console.log(" Connecting to MongoDB...");
     await connect();
-    console.log("✅ MongoDB connection established");
+    console.log(" MongoDB connection established");
   } catch (error) {
-    console.error("❌ Failed to connect to MongoDB. Server will not start.");
+    console.error(" Failed to connect to MongoDB. Server will not start.");
     process.exit(1);
   }
 
@@ -23,7 +23,7 @@ export async function startServer() {
   app.use(express.json());
 
   /**
-   * ✅ Stable CORS configuration with logging
+   *  Stable CORS configuration with logging
    */
   const allowedOrigins = [
     "http://localhost:5173", // Dev frontend
@@ -37,10 +37,10 @@ export async function startServer() {
     origin: function (origin: any, callback: any) {
       console.log("🔍 Incoming origin:", origin);
       if (!origin || allowedOrigins.includes(origin)) {
-        console.log("✅ Allowed by CORS:", origin);
+        console.log(" Allowed by CORS:", origin);
         callback(null, true);
       } else {
-        console.log("❌ Blocked by CORS:", origin);
+        console.log("Blocked by CORS:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -65,7 +65,7 @@ export async function startServer() {
   // Cron route
   app.get("/startCron/:duration", startCron);
 
-  // 👇 Import routes AFTER DB connection
+  //  Import routes AFTER DB connection
   const router = (await import("./routes")).default;
   app.use("/api", router);
 
@@ -76,8 +76,8 @@ export async function startServer() {
 
   const PORT: number = parseInt(process.env.PORT as string) || 4000;
   app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-    console.log(`📚 Swagger docs available at /api-docs`);
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Swagger docs available at /api-docs`);
   });
 }
 

@@ -35,7 +35,7 @@ export async function createActivity(req: Request, res: Response) {
 }
 
 /**
- * Get all activities (optionally filtered by userId)
+ * Get all activities 
  */
 export async function getAllActivities(req: Request, res: Response) {
   try {

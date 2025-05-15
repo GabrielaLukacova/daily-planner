@@ -8,7 +8,7 @@ const taskSchema = new Schema(
     _createdBy: { type: String, ref: "User", required: true },
   },
   {
-    timestamps: true, // 👈 Dette legger til createdAt og updatedAt automatisk
+    timestamps: true,
   }
 );
 
