@@ -95,11 +95,20 @@ export async function updateTaskById(req: Request, res: Response): Promise<void>
   try {
     await connect();
 
-    const { title, isCompleted, highPriority } = req.body;
+    // Build update object dynamically to avoid overwriting with undefined
+    const updateData: Partial<{ title: string; isCompleted: boolean; highPriority: boolean }> = {};
+    if (req.body.title !== undefined) updateData.title = req.body.title;
+    if (req.body.isCompleted !== undefined) updateData.isCompleted = req.body.isCompleted;
+    if (req.body.highPriority !== undefined) updateData.highPriority = req.body.highPriority;
+
+    if (Object.keys(updateData).length === 0) {
+      res.status(400).json({ message: "No valid fields provided for update" });
+      return;
+    }
 
     const updatedTask = await taskModel.findByIdAndUpdate(
       req.params.id,
-      { title, isCompleted, highPriority },
+      updateData,
       { new: true }
     );
 
