@@ -26,12 +26,14 @@ export async function startServer() {
    *  Stable CORS configuration with logging
    */
   const allowedOrigins = [
-    "http://localhost:5173", // Dev frontend
+    "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5175",
-    "https://daily-planner-front.onrender.com", // Prod frontend
-    "https://daily-planner-kyar.onrender.com", // Backend domain if frontend hits this
+    "https://daily-planner-front.onrender.com", 
+    "https://daily-planner-kyar.onrender.com",
+    "https://planit-41v2.onrender.com", 
   ];
+  
 
   const corsOptions = {
     origin: function (origin: any, callback: any) {
