@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import { activityModel } from '../models/activityModel';
 import { connect, disconnect } from '../repository/database';
 
+/**
+ * Create a new activity
+ */
 export async function createActivity(req: Request, res: Response) {
   try {
     await connect();
+
     const newActivity = new activityModel({
-      // id: req.body.id,
       title: req.body.title,
       description: req.body.description,
       date: req.body.date,
@@ -20,38 +23,54 @@ export async function createActivity(req: Request, res: Response) {
 
     const savedActivity = await newActivity.save();
     res.status(201).json(savedActivity);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to create activity', error });
+  } catch (error: any) {
+    console.error("❌ Failed to create activity:", error);
+    res.status(500).json({
+      message: 'Failed to create activity',
+      error: error.message || error,
+    });
   } finally {
     await disconnect();
   }
 }
 
 /**
- * Get all activities
+ * Get all activities (optionally filtered by userId)
  */
 export async function getAllActivities(req: Request, res: Response) {
   try {
     await connect();
-    const result = await activityModel.find({});
-    res.status(200).send(result);
-  } catch {
-    res.status(500).send("Error retrieving activities.");
+
+    const userId = req.query.userId as string | undefined;
+    const query = userId ? { _createdBy: userId } : {};
+
+    const result = await activityModel.find(query).sort({ date: -1 });
+    res.status(200).json(result);
+  } catch (error: any) {
+    console.error("❌ Failed to retrieve activities:", error);
+    res.status(500).json({
+      message: "Error retrieving activities",
+      error: error.message || error,
+    });
   } finally {
     await disconnect();
   }
 }
 
 /**
- * Get specific activity by id
+ * Get specific activity by ID
  */
 export async function getActivityById(req: Request, res: Response) {
   try {
     await connect();
     const result = await activityModel.findById(req.params.id);
-    res.status(200).send(result);
-  } catch {
-    res.status(500).send("Error retrieving activity with id=" + req.params.id);
+    res.status(200).json(result);
+  } catch (error: any) {
+    console.error("❌ Failed to retrieve activity by ID:", error);
+    res.status(500).json({
+      message: "Error retrieving activity",
+      error: error.message || error,
+    });
   } finally {
     await disconnect();
   }
@@ -66,37 +85,49 @@ export async function getActivitiesByQuery(req: Request, res: Response) {
 
   try {
     await connect();
-    const result = await activityModel.find({ [field]: { $regex: value, $options: 'i' } });
-    res.status(200).send(result);
-  } catch (err) {
-    res.status(500).send("Error retrieving activities. Error: " + err);
+    const result = await activityModel.find({
+      [field]: { $regex: value, $options: 'i' },
+    });
+    res.status(200).json(result);
+  } catch (error: any) {
+    console.error("❌ Failed to query activities:", error);
+    res.status(500).json({
+      message: "Error querying activities",
+      error: error.message || error,
+    });
   } finally {
     await disconnect();
   }
 }
 
 /**
- * Update activity by id
+ * Update activity by ID
  */
 export async function updateActivityById(req: Request, res: Response) {
   const id = req.params.id;
   try {
     await connect();
-    const result = await activityModel.findByIdAndUpdate(id, req.body);
+    const result = await activityModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     if (!result) {
-      res.status(404).send('Cannot update activity with id=' + id);
+      res.status(404).json({ message: 'Activity not found' });
     } else {
-      res.status(200).send('Activity was successfully updated.');
+      res.status(200).json({ message: 'Activity updated successfully' });
     }
-  } catch {
-    res.status(500).send('Error updating activity with id=' + id);
+  } catch (error: any) {
+    console.error("❌ Failed to update activity:", error);
+    res.status(500).json({
+      message: "Error updating activity",
+      error: error.message || error,
+    });
   } finally {
     await disconnect();
   }
 }
 
 /**
- * Delete activity by id
+ * Delete activity by ID
  */
 export async function deleteActivityById(req: Request, res: Response) {
   const id = req.params.id;
@@ -104,12 +135,16 @@ export async function deleteActivityById(req: Request, res: Response) {
     await connect();
     const result = await activityModel.findByIdAndDelete(id);
     if (!result) {
-      res.status(404).send('Cannot delete activity with id=' + id);
+      res.status(404).json({ message: 'Activity not found' });
     } else {
-      res.status(200).send('Activity was successfully deleted.');
+      res.status(200).json({ message: 'Activity deleted successfully' });
     }
-  } catch {
-    res.status(500).send('Error deleting activity with id=' + id);
+  } catch (error: any) {
+    console.error("❌ Failed to delete activity:", error);
+    res.status(500).json({
+      message: "Error deleting activity",
+      error: error.message || error,
+    });
   } finally {
     await disconnect();
   }
