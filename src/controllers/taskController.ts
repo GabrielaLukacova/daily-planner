@@ -30,15 +30,22 @@ export async function createTask(req: Request, res: Response) {
 }
 
 /**
- * Get all tasks
+ * Get all tasks for a specific user
  */
 export async function getAllTasks(req: Request, res: Response) {
   try {
     await connect();
 
-    const tasks = await taskModel.find();
+    const userId = req.query.userId as string;
+    if (!userId) {
+      res.status(400).json({ message: "Missing userId" });
+      return;
+    }
+
+    const tasks = await taskModel.find({ _createdBy: userId });
     res.status(200).json(tasks);
   } catch (error: any) {
+    console.error("Failed to fetch tasks:", error);
     res.status(500).json({
       message: "Failed to fetch tasks",
       error: error.message || error,
