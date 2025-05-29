@@ -7,7 +7,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"]
+      "@mocks/*": ["tests/mocks/*"]
     },
     "resolveJsonModule": true,
     "sourceMap": true,
@@ -18,10 +18,6 @@
     "noImplicitAny": true,
     "skipLibCheck": true
   },
-"include": ["./src", "./tests", "tests"],
-"exclude": [
-      "./node_modules/", 
-      "./tests/", 
-      "./dist/"
-    ]
+  "include": ["src", "tests"],
+  "exclude": ["node_modules", "dist"]
 }

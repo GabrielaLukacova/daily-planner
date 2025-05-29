@@ -3,21 +3,14 @@ import { Request, Response } from "express";
 import { userModel } from "../src/models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { mockResponse } from './mocks/mockResponse';
+import { mockRequest } from './mocks/mockRequest';
 
-// Mock dependencies to isolate controller logic
+
+// mock dependencies to isolate controller logic
 jest.mock('../src/models/userModel');
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
-
-// Create a reusable mock response object
-const mockResponse = () => {
-  const res = {} as Partial<Response>;
-  res.status = jest.fn().mockReturnThis();
-  res.json = jest.fn().mockReturnThis();
-  res.header = jest.fn().mockReturnThis();
-  res.send = jest.fn().mockReturnThis();
-  return res as Response;
-};
 
 describe("AuthController - registerUser", () => {
   test("Should return 201 when user is registered successfully", async () => {
