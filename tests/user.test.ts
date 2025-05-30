@@ -1,7 +1,7 @@
 import { registerUser, loginUser } from "../src/controllers/authController";
 import { Request, Response } from "express";
 import { userModel } from "../src/models/userModel";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import { mockResponse } from './mocks/mockResponse';
 import { mockRequest } from './mocks/mockRequest';
