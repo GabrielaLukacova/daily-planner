@@ -9,7 +9,7 @@ import { mockRequest } from './mocks/mockRequest';
 
 // mock dependencies to isolate controller logic
 jest.mock('../src/models/userModel');
-jest.mock('bcrypt');
+jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
 
 describe("AuthController - registerUser", () => {
