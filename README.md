@@ -20,4 +20,4 @@ The API handles:
 - Manual API testing supported with Postman collections  
 - Deployed and hosted on Render platform  
 
----
+![CI Status](https://github.com/GabrielaLukacova/daily-planner/actions/workflows/ci.yml/badge.svg)
