@@ -4,9 +4,11 @@
   "description": "MongoDB Express Node Typescript REST API",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "start": "ts-node src/index.ts",
     "start-dev": "npx nodemon",
-    "test": "jest --config jest.config.ts"
+    "test": "jest --config jest.config.ts",
+    "testdb": "cross-env NODE_ENV=test npx ts-node ./src/index.ts"
   },
   "repository": {
     "type": "git",
