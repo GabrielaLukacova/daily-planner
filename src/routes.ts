@@ -624,5 +624,13 @@ router.post('/register', registerUser);
  */
 router.post('/login', loginUser);
 
+router.get("/health", (_req, res) => {
+  res.send("OK");
+});
+
+// Base API route
+router.get("/", (_req: Request, res: Response) => {
+  res.json({ message: "Daily Planner API is alive!" });
+});
 
 export default router;
