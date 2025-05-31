@@ -5,7 +5,7 @@ import {
   getNoteById,
   getNotesByQuery,
   updateNoteById,
-  deleteNoteById
+  deleteNoteById,
 } from '../src/controllers/noteController';
 import { noteModel } from '../src/models/noteModel';
 import { connect, disconnect } from '../src/repository/database';
@@ -26,12 +26,12 @@ describe('NoteController', () => {
         body: {
           text: 'Important note',
           date: '2025-06-01',
-          _createdBy: 'user123'
-        }
+          _createdBy: 'user123',
+        },
       });
 
       (noteModel as any).mockImplementation(() => ({
-        save: jest.fn().mockResolvedValue({ _id: 'note123' })
+        save: jest.fn().mockResolvedValue({ _id: 'note123' }),
       }));
 
       const res = mockResponse();

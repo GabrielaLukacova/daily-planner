@@ -5,7 +5,7 @@ import {
   getActivityById,
   getActivitiesByQuery,
   updateActivityById,
-  deleteActivityById
+  deleteActivityById,
 } from '../src/controllers/activityController';
 import { activityModel } from '../src/models/activityModel';
 import { connect, disconnect } from '../src/repository/database';
@@ -32,12 +32,12 @@ describe('ActivityController', () => {
           place: 'Zoom',
           isRepeating: false,
           repeating: null,
-          _createdBy: 'user123'
-        }
+          _createdBy: 'user123',
+        },
       });
 
       (activityModel as any).mockImplementation(() => ({
-        save: jest.fn().mockResolvedValue({ _id: 'activity123' })
+        save: jest.fn().mockResolvedValue({ _id: 'activity123' }),
       }));
 
       const res = mockResponse();

@@ -24,7 +24,7 @@ export async function createActivity(req: Request, res: Response) {
     const savedActivity = await newActivity.save();
     res.status(201).json(savedActivity);
   } catch (error: any) {
-    console.error("❌ Failed to create activity:", error);
+    console.error('❌ Failed to create activity:', error);
     res.status(500).json({
       message: 'Failed to create activity',
       error: error.message || error,
@@ -35,7 +35,7 @@ export async function createActivity(req: Request, res: Response) {
 }
 
 /**
- * Get all activities 
+ * Get all activities
  */
 export async function getAllActivities(req: Request, res: Response) {
   try {
@@ -47,9 +47,9 @@ export async function getAllActivities(req: Request, res: Response) {
     const result = await activityModel.find(query).sort({ date: -1 });
     res.status(200).json(result);
   } catch (error: any) {
-    console.error("❌ Failed to retrieve activities:", error);
+    console.error('❌ Failed to retrieve activities:', error);
     res.status(500).json({
-      message: "Error retrieving activities",
+      message: 'Error retrieving activities',
       error: error.message || error,
     });
   } finally {
@@ -66,9 +66,9 @@ export async function getActivityById(req: Request, res: Response) {
     const result = await activityModel.findById(req.params.id);
     res.status(200).json(result);
   } catch (error: any) {
-    console.error("❌ Failed to retrieve activity by ID:", error);
+    console.error('❌ Failed to retrieve activity by ID:', error);
     res.status(500).json({
-      message: "Error retrieving activity",
+      message: 'Error retrieving activity',
       error: error.message || error,
     });
   } finally {
@@ -90,9 +90,9 @@ export async function getActivitiesByQuery(req: Request, res: Response) {
     });
     res.status(200).json(result);
   } catch (error: any) {
-    console.error("❌ Failed to query activities:", error);
+    console.error('❌ Failed to query activities:', error);
     res.status(500).json({
-      message: "Error querying activities",
+      message: 'Error querying activities',
       error: error.message || error,
     });
   } finally {
@@ -116,9 +116,9 @@ export async function updateActivityById(req: Request, res: Response) {
       res.status(200).json({ message: 'Activity updated successfully' });
     }
   } catch (error: any) {
-    console.error("❌ Failed to update activity:", error);
+    console.error('❌ Failed to update activity:', error);
     res.status(500).json({
-      message: "Error updating activity",
+      message: 'Error updating activity',
       error: error.message || error,
     });
   } finally {
@@ -140,9 +140,9 @@ export async function deleteActivityById(req: Request, res: Response) {
       res.status(200).json({ message: 'Activity deleted successfully' });
     }
   } catch (error: any) {
-    console.error("❌ Failed to delete activity:", error);
+    console.error('❌ Failed to delete activity:', error);
     res.status(500).json({
-      message: "Error deleting activity",
+      message: 'Error deleting activity',
       error: error.message || error,
     });
   } finally {

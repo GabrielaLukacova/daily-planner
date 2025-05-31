@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { taskModel } from "../models/taskModel";
+import { Request, Response } from 'express';
+import { taskModel } from '../models/taskModel';
 
 /**
  * Create a new task
@@ -16,9 +16,9 @@ export async function createTask(req: Request, res: Response): Promise<void> {
     const savedTask = await newTask.save();
     res.status(201).json(savedTask);
   } catch (error: any) {
-    console.error("❌ Failed to create task:", error.message);
+    console.error('❌ Failed to create task:', error.message);
     res.status(500).json({
-      message: "Failed to create task",
+      message: 'Failed to create task',
       error: error.message || error,
     });
   }
@@ -35,9 +35,9 @@ export async function getAllTasks(req: Request, res: Response): Promise<void> {
     const tasks = await taskModel.find(query).sort({ createdAt: -1 });
     res.status(200).json(tasks);
   } catch (error: any) {
-    console.error("❌ Failed to fetch tasks:", error.message);
+    console.error('❌ Failed to fetch tasks:', error.message);
     res.status(500).json({
-      message: "Failed to fetch tasks",
+      message: 'Failed to fetch tasks',
       error: error.message || error,
     });
   }
@@ -51,14 +51,14 @@ export async function getTaskById(req: Request, res: Response): Promise<void> {
     const task = await taskModel.findById(req.params.id);
 
     if (!task) {
-      res.status(404).json({ message: "Task not found" });
+      res.status(404).json({ message: 'Task not found' });
       return;
     }
 
     res.status(200).json(task);
   } catch (error: any) {
     res.status(500).json({
-      message: "Error retrieving task",
+      message: 'Error retrieving task',
       error: error.message || error,
     });
   }
@@ -80,14 +80,14 @@ export async function updateTaskById(req: Request, res: Response): Promise<void>
     );
 
     if (!updatedTask) {
-      res.status(404).json({ message: "Task not found" });
+      res.status(404).json({ message: 'Task not found' });
       return;
     }
 
     res.status(200).json(updatedTask);
   } catch (error: any) {
     res.status(500).json({
-      message: "Error updating task",
+      message: 'Error updating task',
       error: error.message || error,
     });
   }
@@ -101,18 +101,15 @@ export async function deleteTaskById(req: Request, res: Response): Promise<void>
     const deletedTask = await taskModel.findByIdAndDelete(req.params.id);
 
     if (!deletedTask) {
-      res.status(404).json({ message: "Task not found" });
+      res.status(404).json({ message: 'Task not found' });
       return;
     }
 
-    res.status(200).json({ message: "Task deleted successfully" });
+    res.status(200).json({ message: 'Task deleted successfully' });
   } catch (error: any) {
     res.status(500).json({
-      message: "Error deleting task",
+      message: 'Error deleting task',
       error: error.message || error,
     });
   }
 }
-
-
-

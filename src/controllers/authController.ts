@@ -1,16 +1,20 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import Joi from "joi";
+import Joi from 'joi';
 
-import { userModel } from "../models/userModel";
-import { User } from "../interfaces/user";
-import { connect } from "../repository/database";
+import { userModel } from '../models/userModel';
+import { User } from '../interfaces/user';
+import { connect } from '../repository/database';
 
 /**
  * Register a new user
  */
-export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const registerUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     await connect();
 
@@ -22,7 +26,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
     const emailExists = await userModel.findOne({ email: req.body.email });
     if (emailExists) {
-      res.status(400).json({ error: "Email already exists." });
+      res.status(400).json({ error: 'Email already exists.' });
       return;
     }
 
@@ -38,8 +42,8 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     const savedUser = await userObject.save();
     res.status(201).json({ error: null, data: savedUser._id });
   } catch (error) {
-    console.error("❌ Error registering user:", error);
-    res.status(500).json({ error: "Server error during registration" });
+    console.error('❌ Error registering user:', error);
+    res.status(500).json({ error: 'Server error during registration' });
   }
 };
 
@@ -58,13 +62,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     const user: User | null = await userModel.findOne({ email: req.body.email });
     if (!user) {
-      res.status(400).json({ error: "Email or password is incorrect" });
+      res.status(400).json({ error: 'Email or password is incorrect' });
       return;
     }
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
-      res.status(400).json({ error: "Email or password is incorrect" });
+      res.status(400).json({ error: 'Email or password is incorrect' });
       return;
     }
 
@@ -75,16 +79,19 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         id: user.id,
       },
       process.env.TOKEN_SECRET as string,
-      { expiresIn: "2h" }
+      { expiresIn: '2h' }
     );
 
-    res.status(200).header("auth-token", token).json({
-      error: null,
-      data: { userId: user.id, token },
-    });
+    res
+      .status(200)
+      .header('auth-token', token)
+      .json({
+        error: null,
+        data: { userId: user.id, token },
+      });
   } catch (error) {
-    console.error("❌ Error logging in user:", error);
-    res.status(500).json({ error: "Server error during login" });
+    console.error('❌ Error logging in user:', error);
+    res.status(500).json({ error: 'Server error during login' });
   }
 };
 
@@ -92,15 +99,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
  * Middleware to verify token (supports both 'Authorization' and 'auth-token')
  */
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
-  const bearer = req.header("Authorization");
-  const authToken = req.header("auth-token");
+  const bearer = req.header('Authorization');
+  const authToken = req.header('auth-token');
 
-  const token = bearer?.startsWith("Bearer ")
-    ? bearer.slice(7)
-    : authToken;
+  const token = bearer?.startsWith('Bearer ') ? bearer.slice(7) : authToken;
 
   if (!token) {
-    res.status(401).json({ error: "Access denied. No token provided." });
+    res.status(401).json({ error: 'Access denied. No token provided.' });
     return;
   }
 
@@ -108,7 +113,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
     jwt.verify(token, process.env.TOKEN_SECRET as string);
     next();
   } catch {
-    res.status(401).send("Invalid Token");
+    res.status(401).send('Invalid Token');
   }
 };
 
@@ -136,5 +141,3 @@ function validateUserLoginInfo(data: User) {
 
   return schema.validate(data);
 }
-
-

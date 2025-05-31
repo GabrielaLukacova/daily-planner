@@ -1,10 +1,10 @@
-import { type Request, type Response } from "express";
-import cron, { ScheduledTask } from "node-cron";
-import https from "https";
+import { type Request, type Response } from 'express';
+import cron, { ScheduledTask } from 'node-cron';
+import https from 'https';
 
 // Settings
 const MINUTES_DELTA = 100;
-const URL = "https://daily-planner-kyar.onrender.com/api/";
+const URL = 'https://daily-planner-kyar.onrender.com/api/';
 let counter = 0;
 let task: ScheduledTask | null = null;
 
@@ -14,8 +14,8 @@ let task: ScheduledTask | null = null;
 function pingServer() {
   https.get(URL, () => {
     counter -= MINUTES_DELTA;
-    console.log("Pinged the server");
-    console.log("Minutes Left:", counter);
+    console.log('Pinged the server');
+    console.log('Minutes Left:', counter);
   });
 }
 
@@ -25,7 +25,7 @@ function pingServer() {
 function stopPingingServer() {
   if (task) {
     task.stop();
-    console.log(" Stopped the cron job due to inactivity");
+    console.log(' Stopped the cron job due to inactivity');
   }
 }
 
@@ -60,7 +60,7 @@ export async function startCron(req: Request, res: Response) {
 
     res.status(200).send(` Started background task for ${totalDuration} minutes.`);
   } catch (error) {
-    console.error(" Error starting cron job:", error);
-    res.status(500).send("Failed to start cron job.");
+    console.error(' Error starting cron job:', error);
+    res.status(500).send('Failed to start cron job.');
   }
 }

@@ -1,36 +1,34 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response } from 'express';
 import { verifyToken, registerUser, loginUser } from './controllers/authController';
 
 import {
-    createActivity,
-    getAllActivities,
-    getActivityById,
-    getActivitiesByQuery,
-    updateActivityById,
-    deleteActivityById,
-  } from './controllers/activityController';
-  
-  import {
-    createNote,
-    getAllNotes,
-    getNoteById,
-    getNotesByQuery,
-    updateNoteById,
-    deleteNoteById,
-  } from './controllers/noteController';
+  createActivity,
+  getAllActivities,
+  getActivityById,
+  getActivitiesByQuery,
+  updateActivityById,
+  deleteActivityById,
+} from './controllers/activityController';
 
-  import {
-    createTask,
-    getAllTasks,
-    getTaskById,
-    updateTaskById,
-    deleteTaskById
-  } from './controllers/taskController';
+import {
+  createNote,
+  getAllNotes,
+  getNoteById,
+  getNotesByQuery,
+  updateNoteById,
+  deleteNoteById,
+} from './controllers/noteController';
+
+import {
+  createTask,
+  getAllTasks,
+  getTaskById,
+  updateTaskById,
+  deleteTaskById,
+} from './controllers/taskController';
 
 const router: Router = Router();
 export { router };
-
-
 
 /** ------------- ACTIVITY ROUTES ------------- */
 
@@ -91,7 +89,6 @@ export { router };
  */
 router.get('/activities/query/:field/:value', verifyToken, getActivitiesByQuery);
 
-
 /**
  * @swagger
  * /activities:
@@ -149,7 +146,6 @@ router.get('/activities/query/:field/:value', verifyToken, getActivitiesByQuery)
  */
 router.post('/activities', verifyToken, createActivity);
 
-
 /**
  * @swagger
  * /activities:
@@ -186,14 +182,13 @@ router.post('/activities', verifyToken, createActivity);
  *                     type: boolean
  *                   repeating:
  *                     type: string
- *                     enum: [None, Daily, Weekly, Monthly] 
+ *                     enum: [None, Daily, Weekly, Monthly]
  *                   _createdBy:
  *                     type: string
  *       '500':
  *         description: Server error
  */
 router.get('/activities', verifyToken, getAllActivities);
-
 
 /**
  * @swagger
@@ -214,7 +209,6 @@ router.get('/activities', verifyToken, getAllActivities);
  *         description: Activity data
  */
 router.get('/activities/:id', verifyToken, getActivityById);
-
 
 /**
  * @swagger
@@ -269,7 +263,6 @@ router.get('/activities/:id', verifyToken, getActivityById);
  */
 router.put('/activities/:id', verifyToken, updateActivityById);
 
-
 /**
  * @swagger
  * /activities/{id}:
@@ -290,10 +283,6 @@ router.put('/activities/:id', verifyToken, updateActivityById);
  */
 router.delete('/activities/:id', verifyToken, deleteActivityById);
 
-
-
-
-
 router.get('/tasks', verifyToken, getAllTasks);
 router.put('/tasks/:id', verifyToken, async (req, res) => {
   await updateTaskById(req, res);
@@ -302,9 +291,6 @@ router.put('/tasks/:id', verifyToken, async (req, res) => {
 router.delete('/tasks/:id', verifyToken, async (req, res) => {
   await deleteTaskById(req, res);
 });
-
-
-
 
 /** ------------- NOTE ROUTES ------------- */
 
@@ -391,7 +377,6 @@ router.get('/notes/:id', verifyToken, getNoteById);
  */
 router.post('/notes', verifyToken, createNote);
 
-
 /**
  * @swagger
  * /notes/{id}:
@@ -452,8 +437,6 @@ router.put('/notes/:id', verifyToken, updateNoteById);
  *         description: Note not found
  */
 router.delete('/notes/:id', verifyToken, deleteNoteById);
-
-
 
 /** ------------- TASK ROUTES ------------- */
 
@@ -576,9 +559,6 @@ router.put('/tasks/:id', verifyToken, updateTaskById);
  */
 router.delete('/tasks/:id', verifyToken, deleteTaskById);
 
-
-
-
 /** ------------- USER ROUTES ------------- */
 
 /**
@@ -624,13 +604,13 @@ router.post('/register', registerUser);
  */
 router.post('/login', loginUser);
 
-router.get("/health", (_req, res) => {
-  res.send("OK");
+router.get('/health', (_req, res) => {
+  res.send('OK');
 });
 
 // Base API route
-router.get("/", (_req: Request, res: Response) => {
-  res.json({ message: "Daily Planner API is alive!" });
+router.get('/', (_req: Request, res: Response) => {
+  res.json({ message: 'Daily Planner API is alive!' });
 });
 
 export default router;

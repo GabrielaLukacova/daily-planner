@@ -4,7 +4,7 @@ import {
   getAllTasks,
   getTaskById,
   updateTaskById,
-  deleteTaskById
+  deleteTaskById,
 } from '../src/controllers/taskController';
 import { taskModel } from '../src/models/taskModel';
 import { mockResponse } from './mocks/mockResponse';
@@ -22,12 +22,12 @@ describe('TaskController', () => {
       const req = mockRequest({
         body: {
           title: 'Finish report',
-          _createdBy: 'user123'
-        }
+          _createdBy: 'user123',
+        },
       });
 
       (taskModel as any).mockImplementation(() => ({
-        save: jest.fn().mockResolvedValue({ _id: 'task123' })
+        save: jest.fn().mockResolvedValue({ _id: 'task123' }),
       }));
 
       const res = mockResponse();
@@ -79,7 +79,7 @@ describe('TaskController', () => {
     test('should return 200 when task is updated', async () => {
       const req = mockRequest({
         params: { id: 'task123' },
-        body: { title: 'Updated', isCompleted: true, highPriority: false }
+        body: { title: 'Updated', isCompleted: true, highPriority: false },
       });
       const res = mockResponse();
 
@@ -93,7 +93,7 @@ describe('TaskController', () => {
     test('should return 404 when task not found', async () => {
       const req = mockRequest({
         params: { id: 'notexist' },
-        body: { title: 'Updated', isCompleted: true, highPriority: false }
+        body: { title: 'Updated', isCompleted: true, highPriority: false },
       });
       const res = mockResponse();
 
