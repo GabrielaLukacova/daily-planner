@@ -5,25 +5,23 @@ import { connect } from './repository/database';
 import { setupSwagger } from './swagger';
 import { startCron } from './controllers/devController';
 
-// Load environment variables
 dotenvFlow.config();
 
-// Start server
-export async function startServer() {
-  try {
-    console.log('🌐 Connecting to MongoDB...');
-    await connect();
-    console.log('✅ MongoDB connection established');
-  } catch (error) {
-    console.error('❌ Failed to connect to MongoDB. Server will not start.');
-    process.exit(1);
+export async function startServer(customApp?: Application) {
+  const app: Application = customApp || express();
+
+  // Only connect to DB if not in test
+  if (!customApp) {
+    try {
+      console.log('🌐 Connecting to MongoDB...');
+      await connect();
+      console.log('✅ MongoDB connection established');
+    } catch (error) {
+      console.error('❌ Failed to connect to MongoDB. Server will not start.');
+      process.exit(1);
+    }
   }
 
-  const app: Application = express();
-
-  /**
-   * ✅ Stable CORS configuration with logging
-   */
   const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:5174',
@@ -56,38 +54,34 @@ export async function startServer() {
     credentials: true,
   };
 
-  // 💡 Apply CORS *before* JSON parser and routes
   app.use(cors(corsOptions));
   app.options('*', cors(corsOptions));
-
   app.use(express.json());
 
-  // Optional: Log requests (can be removed)
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.path}`);
     next();
   });
 
-  // Swagger docs
   setupSwagger(app);
-
-  // Cron route
   app.get('/startCron/:duration', startCron);
 
-  // 👇 Import routes AFTER DB connection
   const router = (await import('./routes')).default;
   app.use('/api', router);
 
-  // Root route
-  app.get('/', (req: Request, res: Response) => {
+  app.get('/', (_req: Request, res: Response) => {
     res.send('Welcome to Daily Planner API!');
   });
 
-  const PORT: number = parseInt(process.env.PORT as string) || 4000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-    console.log(`📚 Swagger docs available at /api-docs`);
-  });
+  if (!customApp) {
+    const PORT: number = parseInt(process.env.PORT as string) || 4000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+      console.log(`📚 Swagger docs available at /api-docs`);
+    });
+  }
+
+  return app;
 }
 
 export default startServer;
