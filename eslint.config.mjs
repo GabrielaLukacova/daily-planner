@@ -21,12 +21,12 @@ export default defineConfig([
         sourceType: "module",
       },
     },
-    env: {
-      browser: true,
-      node: true,
-      es2021: true,
-      commonjs: true,
-    },
+    // env: {
+    //   browser: true,
+    //   node: true,
+    //   es2021: true,
+    //   commonjs: true,
+    // },
     rules: {
       ...tsPlugin.configs.recommended.rules, 
       "@typescript-eslint/no-require-imports": "off",
