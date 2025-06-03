@@ -283,14 +283,6 @@ router.put('/activities/:id', verifyToken, updateActivityById);
  */
 router.delete('/activities/:id', verifyToken, deleteActivityById);
 
-router.get('/tasks', verifyToken, getAllTasks);
-router.put('/tasks/:id', verifyToken, async (req, res) => {
-  await updateTaskById(req, res);
-});
-
-router.delete('/tasks/:id', verifyToken, async (req, res) => {
-  await deleteTaskById(req, res);
-});
 
 /** ------------- NOTE ROUTES ------------- */
 

@@ -29,24 +29,44 @@ export async function createNote(req: Request, res: Response) {
 }
 
 /**
- * Get all notes (optionally filtered by userId)
+ * Get all notes or note for a specific user and date
  */
-export async function getAllNotes(req: Request, res: Response) {
+export async function getAllNotes(req: Request, res: Response): Promise<void> {
   try {
     await connect();
 
     const userId = req.query.userId as string | undefined;
-    const query = userId ? { _createdBy: userId } : {};
+    const date = req.query.date as string | undefined;
 
-    const result = await noteModel.find(query).sort({ date: -1 }); // newest first
-    res.status(200).send(result);
-  } catch (error) {
-    console.error('❌ Failed to retrieve notes:', error);
-    res.status(500).send('Error retrieving notes.');
+    if (!userId) {
+      res.status(400).json({ message: 'Missing userId in query' });
+      return;
+    }
+
+    const query: any = { _createdBy: userId };
+
+    if (date) {
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+
+      query.date = { $gte: start, $lte: end };
+    }
+
+    const result = await noteModel.find(query).sort({ date: -1 });
+    res.status(200).json(result); // ✅ ikke "return" her
+  } catch (error: any) {
+    console.error('❌ Failed to retrieve notes:', error.message);
+    res.status(500).json({
+      message: 'Error retrieving notes',
+      error: error.message || error,
+    });
   } finally {
     await disconnect();
   }
 }
+
 
 /**
  * Get note by ID
@@ -55,7 +75,7 @@ export async function getNoteById(req: Request, res: Response) {
   try {
     await connect();
     const result = await noteModel.findById(req.params.id);
-    res.status(200).send(result);
+    res.status(200).json(result);
   } catch (error) {
     console.error('❌ Failed to get note by ID:', error);
     res.status(500).send('Error retrieving note with id=' + req.params.id);
@@ -76,7 +96,7 @@ export async function getNotesByQuery(req: Request, res: Response) {
     const result = await noteModel.find({
       [field]: { $regex: value, $options: 'i' },
     });
-    res.status(200).send(result);
+    res.status(200).json(result);
   } catch (error) {
     console.error('❌ Failed to query notes:', error);
     res.status(500).send('Error retrieving notes. Error: ' + error);
